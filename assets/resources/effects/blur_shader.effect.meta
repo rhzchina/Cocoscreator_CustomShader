@@ -1,0 +1,11 @@
+{
+  "ver": "1.0.15",
+  "uuid": "9484da1c-ef7e-4da4-b4cd-4f855939221f",
+  "compiledShaders": [
+    {
+      "vert": "\n#define _IS_VERT_SHADER 1\n\n#if _YOYOHAN\n#endif\n\nprecision highp float;\t\t\t\t\t\t\t\t\t\nuniform mat4 cc_matViewProj;\t\t\t\t\t\t\t\n\nattribute vec3 a_position;\t\t\t\t\t\t\t\t\nattribute lowp vec4 a_color;\t\t\t\t\t\t\t\nattribute mediump vec2 a_uv0;\t\t\t\t\t\t\t\n\nvarying mediump vec2 v_uv0;\t\t\t\t\t\t\t\t\nvarying lowp vec4 v_color;\t\t\t\t\t\t\t\t\n\nvoid main () {\n  mat4 mvp;\t\t\t\t\t\t\t\t\t\t\t\t\n\n  mvp = cc_matViewProj;\n  v_uv0 = a_uv0;\n  v_color = a_color;\n  gl_Position = mvp * vec4(a_position, 1);\t\t\t\t\n}\n\n\n",
+      "frag": "\n#define _IS_FRAG_SHADER 1\n\nprecision highp float;\t\t\t\t\t\t\t\t\t\nuniform sampler2D myTexture;\nuniform float blurThreshold;\t\t\t\t\t\t\n\nvarying mediump vec2 v_uv0;\t\t\t\t\t\t\t\nvarying lowp vec4 v_color;\t\t\t\t\t\t\t\n\nvoid main () {\n\t\n\tfloat scale = 40.0 * blurThreshold;\n\tvec2 blurSize=vec2(scale,scale);\n\tvec4 sum=vec4(0.0);\n\tsum+=texture2D(myTexture,v_uv0-0.0004*blurSize)*0.05;\n\tsum+=texture2D(myTexture,v_uv0-0.0003*blurSize)*0.09;\n\tsum+=texture2D(myTexture,v_uv0-0.0002*blurSize)*0.12;\n\tsum+=texture2D(myTexture,v_uv0-0.0001*blurSize)*0.15;\n\tsum+=texture2D(myTexture,v_uv0)*0.16;\n\tsum+=texture2D(myTexture,v_uv0+0.0001*blurSize)*0.15;\n\tsum+=texture2D(myTexture,v_uv0+0.0002*blurSize)*0.12;\n\tsum+=texture2D(myTexture,v_uv0+0.0003*blurSize)*0.09;\n\tsum+=texture2D(myTexture,v_uv0+0.0004*blurSize)*0.05;\t\n\t\n\n\tgl_FragColor = v_color*sum;\t\t\t\t\t\t\t\t\n}\n\n\n"
+    }
+  ],
+  "subMetas": {}
+}

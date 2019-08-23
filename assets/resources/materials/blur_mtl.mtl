@@ -1,0 +1,16 @@
+{
+  "__type__": "cc.Material",
+  "_name": "",
+  "_objFlags": 0,
+  "_native": "",
+  "_effectAsset": {
+    "__uuid__": "9484da1c-ef7e-4da4-b4cd-4f855939221f"
+  },
+  "_defines": {},
+  "_props": {
+    "myTexture": {
+      "__uuid__": "e7d800c2-72a4-4447-8aca-9fe9e4623558"
+    },
+    "blurThreshold": 2
+  }
+}

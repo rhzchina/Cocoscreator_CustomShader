@@ -1,0 +1,115 @@
+// Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.  
+
+// Note: Current format version is experiment, the format may be changed.
+// The future format may not be compatible, you may need to update the script manually.
+
+// 注意：当前版本的格式是实验性的，之后还会进行修改。
+// 后续版本的格式不保证兼容当前格式，可能需要手动升级到最新版本。，
+
+//描述开始
+%{
+  techniques: [
+    {
+      passes: [
+        {
+          vert: vs
+          frag: fs
+          cullMode: none
+          blend: true
+        }
+      ]
+      layer: 0
+    }
+  ]
+  properties: {
+    myTexture: {
+      type: sampler2D
+      value: null
+    }
+    blurThreshold: {
+      type: number
+      value: 0.5
+    }
+  }
+%}
+//描述结束
+
+
+
+
+
+
+
+
+//顶点开始
+%% vs {
+
+#if _YOYOHAN
+#endif
+
+
+precision highp float;									//float使用的最高精度   GLSL描述精度 high p 、 medium P  、low p
+uniform mat4 cc_matViewProj;							//引擎提交绘制物体 会设置好 mvp变换矩阵 即投影					
+
+attribute vec3 a_position;								//attribute 渲染管道传过来的顶点坐标 只能在顶点Shader中使用
+attribute lowp vec4 a_color;							//attribute 渲染管道传过来的颜色坐标 只能在顶点Shader中使用
+attribute mediump vec2 a_uv0;							//attribute 渲染管道传过来的纹理坐标 只能在顶点Shader中使用		 	
+
+varying mediump vec2 v_uv0;								//varying 传递给着色渲染数据						
+varying lowp vec4 v_color;								//varying 传递给着色渲染数据
+
+
+//改变物体形状的算法
+void main () {
+  mat4 mvp;												//mvp是变换矩阵
+
+  mvp = cc_matViewProj;
+  v_uv0 = a_uv0;
+  v_color = a_color;
+  gl_Position = mvp * vec4(a_position, 1);				//gl_Position  ccc最终用的数据
+}
+
+}
+//顶点结束
+
+
+
+
+
+
+
+
+//着色开始
+%% fs {
+
+precision highp float;									
+uniform sampler2D myTexture;
+uniform float blurThreshold;						//代码声明的变量 必须是uniform 属性定义的变量 一定要在shader代码里定义
+
+varying mediump vec2 v_uv0;							//接收顶点传过来的数据
+varying lowp vec4 v_color;							//接收顶点传过来的数据
+
+//着色Shader的入口;
+void main () {
+	
+	float scale = 40.0 * blurThreshold;
+	vec2 blurSize=vec2(scale,scale);
+	vec4 sum=vec4(0.0);
+	sum+=texture2D(myTexture,v_uv0-0.0004*blurSize)*0.05;
+	sum+=texture2D(myTexture,v_uv0-0.0003*blurSize)*0.09;
+	sum+=texture2D(myTexture,v_uv0-0.0002*blurSize)*0.12;
+	sum+=texture2D(myTexture,v_uv0-0.0001*blurSize)*0.15;
+	sum+=texture2D(myTexture,v_uv0)*0.16;
+	sum+=texture2D(myTexture,v_uv0+0.0001*blurSize)*0.15;
+	sum+=texture2D(myTexture,v_uv0+0.0002*blurSize)*0.12;
+	sum+=texture2D(myTexture,v_uv0+0.0003*blurSize)*0.09;
+	sum+=texture2D(myTexture,v_uv0+0.0004*blurSize)*0.05;	
+	
+
+	gl_FragColor = v_color*sum;								//gl_FragColor  ccc最终用的数据 frag着色
+}
+}
+//着色结束
+
+
+
